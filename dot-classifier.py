@@ -75,14 +75,27 @@ def contar_pontos_e_colisoes(imagem_path, cor_branca, cor_vermelha, cor_azul):
             # Marcar trajetória de colisão em vermelho
             cv2.line(img_resultado, (x, y), (x, altura), (0, 0, 255), 2)
     
+    # Criar uma imagem colorida para visualização
+    img_elementos = np.zeros_like(img)
+    img_elementos[mask_branco > 0] = [255, 255, 255]  # Pontos brancos em branco
+    img_elementos[mask_vermelho > 0] = [0, 0, 255]    # Pontos vermelhos em vermelho
+    # img_elementos[mask_lago > 0] = [255, 0, 0]    # Água em azul
+    
     # Mostrar as imagens
-    """
-    cv2.imshow('Estrelas', mask_branco)
-    cv2.imshow('Meteoros', mask_vermelho)
-    cv2.imshow('Lago', mask_lago)
-    cv2.waitKey(5000)
+    cv2.imshow('Imagem com trajetoria', img_resultado)
+    cv2.imshow('Elementos', img_elementos)
+    # cv2.imshow('Estrelas', mask_branco)
+    # cv2.imshow('Meteoros', mask_vermelho)
+    # cv2.imshow('Lago', mask_lago)
+    cv2.waitKey(0)
     cv2.destroyAllWindows()
-    """
+    
+    # BAIXAR ARQUIVO PNG COM TODAS AS IMAGENS
+    # cv2.imwrite('resultado_elementos_2.png', img_elementos)
+    # cv2.imwrite('resultado_trajetoria.png', img_resultado)
+    # cv2.imwrite('resultado_meteoritos.png', mask_vermelho)
+    # cv2.imwrite('resultado_estrelas.png', mask_branco)
+    
     
     return cv2.countNonZero(mask_branco), cv2.countNonZero(mask_vermelho), cont_meteoro
 
