@@ -61,7 +61,7 @@ for meteor_start in meteoros_iniciais:
 - Trajetórias em vermelho: meteoros que colidirão com o lago
 - Exibição das máscaras separadas para análise visual
 
-x<div align="center">
+<div align="center">
 
 ### Máscara da posição dos meteoros
 
