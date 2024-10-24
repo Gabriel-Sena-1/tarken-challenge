@@ -61,6 +61,34 @@ for meteor_start in meteoros_iniciais:
 - Trajetórias em vermelho: meteoros que colidirão com o lago
 - Exibição das máscaras separadas para análise visual
 
+x<div align="center">
+
+### Máscara da posição dos meteoros
+
+A seguinte imagem exibe pontos das coordenadas dos meteoros na imagem original.
+
+![Meteoros](./img/resultado_meteoritos.png)
+
+### Máscara da posição das estrelas
+
+A seguinte imagem exibe pontos das coordenadas das estrelas na imagem original.
+
+![Estrelas](./img/resultado_estrelas.png)
+
+### Todos os elementos
+
+A seguinte imagem exibe todos os elementos que nos interessam destacados em suas respectivas cores.
+
+![Elementos](./img/resultado_elementos.png)
+
+### Trajetória dos meteoros
+
+A seguinte imagem exibe em vermelho as linhas da trajetória dos meteoros que colidem com a água, em verde a trajetória dos que não colidem.
+
+![Trajetórias](./img/resultado_trajetoria.png)
+
+</div>
+
 ### Como Usar
 
 1. Defina os intervalos de cores HSV:
