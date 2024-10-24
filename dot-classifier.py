@@ -14,7 +14,6 @@ def contar_pontos_e_colisoes(imagem_path, cor_branca, cor_vermelha, cor_azul):
     Returns:
         tuple: Tupla com o número de pontos brancos, vermelhos e meteoros que colidem com o lago.
     """
-
     # Carregar a imagem
     img = cv2.imread(imagem_path)
     altura, largura = img.shape[:2]
@@ -42,47 +41,49 @@ def contar_pontos_e_colisoes(imagem_path, cor_branca, cor_vermelha, cor_azul):
     mask_lago = cv2.inRange(hsv, lower_blue, upper_blue)
 
     # Criar imagem para visualização
-    img_resultado = np.zeros_like(img)
-    img_resultado[mask_branco > 0] = [255, 255, 255]  # Pontos brancos
-    img_resultado[mask_vermelho > 0] = [0, 0, 255]    # Meteoros
-    img_resultado[mask_lago > 0] = [255, 0, 0]        # Lago
+    img_resultado = img.copy()
     
-    
-    altura, largura = img.shape[:2]
-    cont_meteoro = 0
     # Encontrar contornos dos meteoros
     contours_meteoros, _ = cv2.findContours(mask_vermelho, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-    # Encontrar contornos do lago
-    contours_lago, _ = cv2.findContours(mask_lago, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-    # Determinar a posição do "teto" do lago
-    teto_lago_y = altura  # Inicializa como altura máxima da imagem
-    for contour in contours_lago:
-        x, y, w, h = cv2.boundingRect(contour)
-        teto_lago_y = min(teto_lago_y, y)  # A parte superior do lago
-
-        # Marcar o teto do lago na imagem
-        cv2.line(img, (0, teto_lago_y), (largura, teto_lago_y), (255, 255, 0), 2)  # Linha amarela
-
-    # Analisar cada meteorito individualmente
+    
+    # Encontrar os pontos mais altos de cada meteoro
+    meteoros_iniciais = []
     for contour in contours_meteoros:
-        x, y, w, h = cv2.boundingRect(contour)
-        meteor_y_center = y + h // 2
+        # Encontrar o ponto mais alto (menor y) do meteoro
+        top_point = tuple(contour[contour[:, :, 1].argmin()][0])
+        meteoros_iniciais.append(top_point)
+    
+    # Contar colisões
+    cont_meteoro = 0
+    
+    # Para cada meteoro, traçar uma linha vertical e verificar interseção com o lago
+    for meteor_start in meteoros_iniciais:
+        x, y = meteor_start
         
-        # Verificar se o meteorito colide com o lago
-        if meteor_y_center <= teto_lago_y:
-            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)  # Marcar meteoros colidindo em verde
+        # Desenhar a trajetória prevista
+        cv2.line(img_resultado, (x, y), (x, altura), (0, 255, 0), 1)
+        
+        # Verificar se há colisão com o lago
+        colidiu = False
+        for y_pos in range(y, altura):
+            if mask_lago[y_pos, x] > 0:
+                colidiu = True
+                break
+        
+        if colidiu:
             cont_meteoro += 1
-            
-    # Mostrar a imagem com os pontos e trajetórias
-    cv2.imshow('Meteoros estrelas e lago', img_resultado)
+            # Marcar trajetória de colisão em vermelho
+            cv2.line(img_resultado, (x, y), (x, altura), (0, 0, 255), 2)
+    
+    # Mostrar as imagens
+    """
     cv2.imshow('Estrelas', mask_branco)
     cv2.imshow('Meteoros', mask_vermelho)
     cv2.imshow('Lago', mask_lago)
-    cv2.waitKey(0)
+    cv2.waitKey(5000)
     cv2.destroyAllWindows()
-
+    """
+    
     return cv2.countNonZero(mask_branco), cv2.countNonZero(mask_vermelho), cont_meteoro
 
 
