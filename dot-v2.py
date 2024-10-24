@@ -47,34 +47,6 @@ def contar_pontos_e_colisoes(imagem_path, cor_branca, cor_vermelha, cor_azul):
     img_resultado[mask_vermelho > 0] = [0, 0, 255]    # Meteoros
     img_resultado[mask_lago > 0] = [255, 0, 0]        # Lago
     
-    
-    altura, largura = img.shape[:2]
-    cont_meteoro = 0
-    # Encontrar contornos dos meteoros
-    contours_meteoros, _ = cv2.findContours(mask_vermelho, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-    # Encontrar contornos do lago
-    contours_lago, _ = cv2.findContours(mask_lago, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-    # Determinar a posição do "teto" do lago
-    teto_lago_y = altura  # Inicializa como altura máxima da imagem
-    for contour in contours_lago:
-        x, y, w, h = cv2.boundingRect(contour)
-        teto_lago_y = min(teto_lago_y, y)  # A parte superior do lago
-
-        # Marcar o teto do lago na imagem
-        cv2.line(img, (0, teto_lago_y), (largura, teto_lago_y), (255, 255, 0), 2)  # Linha amarela
-
-    # Analisar cada meteorito individualmente
-    for contour in contours_meteoros:
-        x, y, w, h = cv2.boundingRect(contour)
-        meteor_y_center = y + h // 2
-        
-        # Verificar se o meteorito colide com o lago
-        if meteor_y_center <= teto_lago_y:
-            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)  # Marcar meteoros colidindo em verde
-            cont_meteoro += 1
-            
     # Mostrar a imagem com os pontos e trajetórias
     cv2.imshow('Meteoros estrelas e lago', img_resultado)
     cv2.imshow('Estrelas', mask_branco)
@@ -83,8 +55,7 @@ def contar_pontos_e_colisoes(imagem_path, cor_branca, cor_vermelha, cor_azul):
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-    return cv2.countNonZero(mask_branco), cv2.countNonZero(mask_vermelho), cont_meteoro
-
+    return cv2.countNonZero(mask_branco), cv2.countNonZero(mask_vermelho)
 
 # Definição dos ranges de cores
 branco = ((0, 0, 200), (180, 30, 255))
@@ -96,8 +67,7 @@ azul = ((100, 150, 200), (130, 255, 255))  # Azul puro até azul escuro
 
 # Executar análise
 imagem = 'meteor_challenge_01.png'
-estrelas, meteoros, qtd_colisao = contar_pontos_e_colisoes(imagem, branco, vermelho, azul)
+estrelas, meteoros = contar_pontos_e_colisoes(imagem, branco, vermelho, azul)
 
 print("Estrelas:", estrelas)
 print("Meteoros:", meteoros)
-print("Quantidade de meteoros que colidem:", qtd_colisao)
