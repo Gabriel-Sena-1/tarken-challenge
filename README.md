@@ -107,3 +107,11 @@ estrelas, meteoros, qtd_colisao = contar_pontos_e_colisoes(imagem, branco, verme
 ```
 
 ---
+### Retornos
+
+```python
+    Estrelas: 315
+    Meteoros: 328
+    Quantidade de meteoros que colidem com a água: 104
+```
+---
