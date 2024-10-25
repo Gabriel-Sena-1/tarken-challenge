@@ -45,13 +45,38 @@ def contar_pontos_e_colisoes(imagem_path, cor_branca, cor_vermelha, cor_azul):
     
     # Encontrar contornos dos meteoros
     contours_meteoros, _ = cv2.findContours(mask_vermelho, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours_estrelas, _ = cv2.findContours(mask_branco, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     
     # Encontrar os pontos mais altos de cada meteoro
     meteoros_iniciais = []
+    estrelas_iniciais = []
+    
     for contour in contours_meteoros:
         # Encontrar o ponto mais alto (menor y) do meteoro
         top_point = tuple(contour[contour[:, :, 1].argmin()][0])
         meteoros_iniciais.append(top_point)
+    
+    for contour in contours_estrelas:
+        # Encontrar o ponto mais alto (menor y) do meteoro
+        top_point = tuple(contour[contour[:, :, 1].argmin()][0])
+        estrelas_iniciais.append(top_point)
+    
+    # Inverter a lista de meteoros
+    meteoros_iniciais.reverse()
+    # Inverter a lista de estrelas
+    estrelas_iniciais.reverse()
+    
+    # # Traçar linhas entre meteoros consecutivos
+    # for i in range(len(meteoros_iniciais) - 1):  # Loop até o penúltimo meteoro
+    #     cv2.line(img, meteoros_iniciais[i], meteoros_iniciais[i + 1], (0, 255, 0), 1)  # Linha verde entre pontos consecutivos
+    
+    # # Traçar linhas entre estrelas consecutivos
+    # for i in range(len(estrelas_iniciais) - 1):  # Loop até a penultima estrela
+    #     cv2.line(img, estrelas_iniciais[i], estrelas_iniciais[i + 1], (0, 255, 0), 1)  # Linha verde entre pontos consecutivos
+    # Traçar linhas verticais entre meteoros consecutivos
+        
+    # Mostrar a imagem com os pontos e linhas
+    cv2.imshow('Pontos e Linhas', img)
     
     # Contar colisões
     cont_meteoro = 0
