@@ -61,22 +61,18 @@ def contar_pontos_e_colisoes(imagem_path, cor_branca, cor_vermelha, cor_azul):
         top_point = tuple(contour[contour[:, :, 1].argmin()][0])
         estrelas_iniciais.append(top_point)
     
-    # Inverter a lista de meteoros
-    meteoros_iniciais.reverse()
-    # Inverter a lista de estrelas
-    estrelas_iniciais.reverse()
+    """ TENTATIVA DE ENCONTRAR A FRASE ENTRE OS PONTOS
+    # Traçar linhas entre meteoros consecutivos -> tenta pegar cada meteoro contabilizado e conectar ele com o próximo e assim por diante
+    for i in range(len(meteoros_iniciais) - 1):  # Loop até o penúltimo meteoro
+        cv2.line(img, meteoros_iniciais[i], meteoros_iniciais[i + 1], (0, 255, 0), 1)  # Linha verde entre pontos consecutivos
     
-    # # Traçar linhas entre meteoros consecutivos
-    # for i in range(len(meteoros_iniciais) - 1):  # Loop até o penúltimo meteoro
-    #     cv2.line(img, meteoros_iniciais[i], meteoros_iniciais[i + 1], (0, 255, 0), 1)  # Linha verde entre pontos consecutivos
-    
-    # # Traçar linhas entre estrelas consecutivos
-    # for i in range(len(estrelas_iniciais) - 1):  # Loop até a penultima estrela
-    #     cv2.line(img, estrelas_iniciais[i], estrelas_iniciais[i + 1], (0, 255, 0), 1)  # Linha verde entre pontos consecutivos
-    # Traçar linhas verticais entre meteoros consecutivos
-        
+    # Traçar linhas entre estrelas consecutivos -> o mesmo que os meteoros
+    for i in range(len(estrelas_iniciais) - 1):  # Loop até a penultima estrela
+        cv2.line(img, estrelas_iniciais[i], estrelas_iniciais[i + 1], (0, 255, 0), 1)  # Linha verde entre pontos consecutivos
+    """
+     
     # Mostrar a imagem com os pontos e linhas
-    cv2.imshow('Pontos e Linhas', img)
+    # cv2.imshow('Pontos e Linhas', img) -> não funcionou =/
     
     # Contar colisões
     cont_meteoro = 0
@@ -86,32 +82,32 @@ def contar_pontos_e_colisoes(imagem_path, cor_branca, cor_vermelha, cor_azul):
         x, y = meteor_start
         
         # Desenhar a trajetória prevista
-        cv2.line(img_resultado, (x, y), (x, altura), (0, 255, 0), 1)
+        cv2.line(img_resultado, (x, y), (x, altura), (0, 255, 0), 1) # traça uma linha do ponto anotado como meteoro até o "piso" da imagem
         
         # Verificar se há colisão com o lago
         colidiu = False
         for y_pos in range(y, altura):
-            if mask_lago[y_pos, x] > 0:
+            if mask_lago[y_pos, x] > 0: # verifica se a linha perpendicular do meteoro invade a máscara aplicada sobre a água
                 colidiu = True
                 break
         
         if colidiu:
-            cont_meteoro += 1
+            cont_meteoro += 1 # contabiliza a quantidade de colisões
             # Marcar trajetória de colisão em vermelho
-            cv2.line(img_resultado, (x, y), (x, altura), (0, 0, 255), 2)
+            cv2.line(img_resultado, (x, y), (x, altura), (0, 0, 255), 2) # traça uma linha da cor vermelha (hsv)
     
     # Criar uma imagem colorida para visualização
     img_elementos = np.zeros_like(img)
     img_elementos[mask_branco > 0] = [255, 255, 255]  # Pontos brancos em branco
     img_elementos[mask_vermelho > 0] = [0, 0, 255]    # Pontos vermelhos em vermelho
-    # img_elementos[mask_lago > 0] = [255, 0, 0]    # Água em azul
+    img_elementos[mask_lago > 0] = [255, 0, 0]    # Água em azul
     
     # Mostrar as imagens
     cv2.imshow('Imagem com trajetoria', img_resultado)
     cv2.imshow('Elementos', img_elementos)
-    # cv2.imshow('Estrelas', mask_branco)
-    # cv2.imshow('Meteoros', mask_vermelho)
-    # cv2.imshow('Lago', mask_lago)
+    cv2.imshow('Estrelas', mask_branco)
+    cv2.imshow('Meteoros', mask_vermelho)
+    cv2.imshow('Lago', mask_lago)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
     
