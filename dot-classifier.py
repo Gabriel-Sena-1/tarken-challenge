@@ -130,7 +130,7 @@ vermelho = (
 azul = ((100, 150, 200), (130, 255, 255))  # Azul puro até azul escuro
 
 # Executar análise
-imagem = 'meteor_challenge_01.png'
+imagem = './img/meteor_challenge_01.png'
 estrelas, meteoros, qtd_colisao = contar_pontos_e_colisoes(imagem, branco, vermelho, azul)
 
 print("Estrelas:", estrelas)
