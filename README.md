@@ -9,11 +9,11 @@ O desafio consiste em analisar uma imagem contendo meteoros (representados por t
 
 #### 1. Processamento de Imagem
 - Utilização do OpenCV para carregar e processar a imagem
-- Conversão do espaço de cores BGR para HSV para melhor detecção de cores
+- Conversão do espaço de cores BGR para [HSV](https://doc.arcgis.com/pt-br/arcgis-online/analyze/color-model-conversion-function.htm#:~:text=O%20modelo%20de%20cores%20HSV,suporta%20entradas%20de%203%2Dbandas.) (mais informações HSV clicando no link) para melhor detecção de cores.
 - Criação de máscaras para identificar diferentes elementos:
   - Máscara branca: detecta estrelas
   - Máscara vermelha: detecta meteoros
-  - Máscara azul: detecta o lago
+  - Máscara azul: detecta a água (acabei chamando de lago durante o código)
 
 ```python
 # Converter imagem para HSV
@@ -55,11 +55,12 @@ for meteor_start in meteoros_iniciais:
         cont_meteoro += 1
 ```
 
-#### 4. Visualização
+#### 4. Resultados
 - Exibição da imagem original com trajetórias previstas
 - Trajetórias em verde: caminho previsto do meteoro
 - Trajetórias em vermelho: meteoros que colidirão com o lago
 - Exibição das máscaras separadas para análise visual
+- Respostas das questões
 
 <div align="center">
 
@@ -107,7 +108,7 @@ estrelas, meteoros, qtd_colisao = contar_pontos_e_colisoes(imagem, branco, verme
 ```
 
 ---
-### Retornos
+### Retornos - Resolução do desafio
 
 ```bash
     C:\xampp\htdocs\tarken-challenge> python .\dot-classifier.py
